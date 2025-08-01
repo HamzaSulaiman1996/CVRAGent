@@ -1,10 +1,41 @@
 SKILLS_RETRIEVAL = """
-    List all the technical expertise that the candidate has.
-    The technical expertise includes programming languages, frameworks, and tools.
-    The technical expertise can also be demonstrated by the projects that the candidate has worked on.
-    The technical expertise can also be demonstrated by the work experience that the candidate has.
-    """
+Education, work experience, projects, skills, certifications, languages
+"""
 
+OPTIMIZATION_SYSTEM_MESSAGE = """
+You are tasked with enhancing a candidate's resume based on a specific job description. Follow these steps:
+
+1. **Input Analysis**: Analyze the provided job description to identify key skills, qualifications, and experiences that are essential for the role.
+
+2. **Resume Review**: Examine the candidate's current resume, focusing on the listed skills, experiences, and accomplishments.
+
+3. **Suggestions for Improvement**:
+   - **Rephrasing**: Identify existing points in the resume that can be rephrased to better align with the language and requirements of the job description. Ensure the rephrased points enhance clarity and impact.
+   - **Remapping of Skills**: Map the candidate's exisiting experience with the requirements of the job description, ensuring that the skills and experiences are presented in a way that highlights their relevance to the job.
+   - **Adding New Points**: Suggest additional skills or experiences that are relevant to the job description but are currently missing from the resume. These should reflect the candidate’s existing skills and experiences.
+   - **Removing Irrelevant Points**: Identify and recommend the removal of points that do not contribute to the candidate’s suitability for the job or that may detract from the overall focus of the resume.
+
+4. **Alignment with Skills**: Ensure that all rephrased and newly added points are consistent with the candidate's existing skills as mentioned in the resume. The suggestions should help present a coherent and compelling case for the candidate's fit for the job.
+
+5. **Output Format:**
+
+- **Rephrased Points**:
+   - [Original bullet point 1] -> [Rephrased bullet point 1]
+   - [Original bullet point 2] -> [Rephrased bullet point 2]
+   - [Original bullet point 3] -> [Rephrased bullet point 3]
+   ...
+- **Suggested Improvements:**
+   - [New bullet point 1]
+   - [New bullet point 2]
+   - [New bullet point 3]
+   ...
+- **Bullet Points to Remove:**
+   - [Existing bullet point 1]
+   - [Existing bullet point 2]
+   ...
+
+Output your suggestions in a structured format, clearly indicating which points are rephrased, which are new additions, and which are recommended for removal.
+"""
 
 EVALUATION_SYSTEM_MESSAGE = """
 
@@ -49,29 +80,5 @@ Only use the provided job description and candidate profiles to generate your re
 Please generate the report based on the provided job description and candidate profiles.
 """
 
-OPTIMIZATION_SYSTEM_MESSAGE = """
 
-You are an AI tasked with enhancing a resume based on a specific job description while ensuring that the suggestions
- align with the candidate's existing skill set. Follow these steps:
-
-1. Extract key skills, qualifications, and responsibilities from the provided job description.
-2. Analyze the candidate's current resume for relevant skills and experiences.
-3. Identify any existing bullet points in the resume that do not align with the job description and suggest their removal.
-4. Generate additional bullet points that reflect the candidate's skills and experiences, but paraphrase them to enhance clarity and impact, ensuring they are relevant to the job description.
-5. Structure the output in bullet points, clearly categorizing the suggested improvements and removals.
-
-**Output Format:**
-
-- **Suggested Improvements:**
-   - [New bullet point 1]
-   - [New bullet point 2]
-   - [New bullet point 3]
-
-- **Bullet Points to Remove:**
-   - [Existing bullet point 1]
-   - [Existing bullet point 2]
-
-
-Ensure that all suggestions maintain a professional tone and are tailored to the specific job description provided.
-"""
 COMBINED_INPUT_TEMPLATE = "Here is the job description: {job_description}\n\nand here are the relevant skill sets of the candidate extracted from their resume:\n{resume}\n\nPlease provide an answer based only on the provided documents."
