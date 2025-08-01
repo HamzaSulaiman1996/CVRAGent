@@ -42,7 +42,7 @@ class PDFParser(BaseParser):
 
         self.text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=self.chunk_size,
-            chunk_overlap=10,
+            chunk_overlap=50,
             length_function=len,
         )
 

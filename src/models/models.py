@@ -12,7 +12,9 @@ from .model_config import LLM_MODELS, ModelProvider, TaskType
 logger = logging.getLogger(__name__)
 
 
-def hugging_face_model(model: str, task: TaskType, verbose: bool = True, **kwargs) -> ChatHuggingFace:
+def hugging_face_model(
+    model: str, task: TaskType = "text-generation", verbose: bool = True, **kwargs
+) -> ChatHuggingFace:
     """
     Create a HuggingFace chat model with the specified parameters.
 
@@ -40,8 +42,8 @@ def init_model(provider: ModelProvider, model_name: str, uses_api_key: bool = Tr
 
     logger.info(f"Initializing model: {model_name} from provider: {provider}")
     model_init_fn: Dict[ModelProvider, Callable[..., BaseChatModel]] = {
-        "huggingface": partial(hugging_face_model, **kwargs),
-        "openai": partial(ChatOpenAI, **kwargs),
+        ModelProvider.HUGGINGFACE: partial(hugging_face_model, **kwargs),
+        ModelProvider.OPENAI: partial(ChatOpenAI, **kwargs),
     }
 
     if uses_api_key:
