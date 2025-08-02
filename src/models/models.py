@@ -20,7 +20,7 @@ def hugging_face_model(
 
     Args:
         model (str): The name of the HuggingFace model.
-        tasks (TaskType): The task type for the model.
+        task (TaskType): The task type for the model.
         verbose (bool): Whether to enable verbose logging.
         **kwargs: Additional keyword arguments for endpoint configuration.
 

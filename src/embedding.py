@@ -25,7 +25,7 @@ EMBEDDING_MODELS: defaultdict[EmbeddingProvider, list[str]] = defaultdict(
 
 def init_embedding_model(
     provider: EmbeddingProvider = EmbeddingProvider.FastEmbed,
-    embedding_model_name: str = 'BAAI/bge-small-en-v1.5',
+    embedding_model_name: str = "BAAI/bge-small-en-v1.5",
     **kwargs,
 ) -> Embeddings:
 
@@ -36,7 +36,10 @@ def init_embedding_model(
         )
 
     logger.info(f"Initializing embedding model: {embedding_model_name} from provider: {provider.value}")
-    embedding_init_fn = {EmbeddingProvider.FastEmbed: FastEmbedEmbeddings, EmbeddingProvider.OPENAI: OpenAIEmbeddings}
+    embedding_init_fn = {
+        EmbeddingProvider.FastEmbed: FastEmbedEmbeddings,
+        EmbeddingProvider.OPENAI: OpenAIEmbeddings,
+    }
 
     if provider == EmbeddingProvider.OPENAI:
         return embedding_init_fn[provider](model=embedding_model_name, **kwargs)

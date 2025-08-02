@@ -2,7 +2,6 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Iterable
 
 from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter, TextSplitter
@@ -19,7 +18,7 @@ class BaseParser(ABC):
         pass
 
     @abstractmethod
-    def _parse_file(self) -> Iterable[Document] | list[Document]:
+    def _parse_file(self) -> list[Document]:
         """
         Abstract method to parse the file and return text content.
         """
@@ -56,7 +55,7 @@ class PDFParser(BaseParser):
         text_content = self._parse_file()
         return self.text_splitter.split_documents(text_content)
 
-    def _parse_file(self) -> Iterable[Document] | list[Document]:
+    def _parse_file(self) -> list[Document]:
         pdf_reader = PdfReader(self.file_path)
         pdf_text = ""
         for page in pdf_reader.pages:

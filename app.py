@@ -17,7 +17,9 @@ from src.parser import PDFParser
 
 
 @st.cache_data(show_spinner=False, max_entries=3)
-def model_output(model_provider: str, model_name: str, resume_content: str, jd: str, sr: bool = True, **kwargs) -> str:
+def model_output(
+    model_provider: str, model_name: str, resume_content: str, jd: str, which_button: bool = True, **kwargs
+) -> str:
     """
     Cache the model output based on model name, job description, and resume content.
     """
@@ -68,7 +70,6 @@ def main():
     st.title("CVRAGent :pencil:")
     st.write("An AI-powered CV Review Agent :robot_face:")
 
-    sr = True
     with st.sidebar:
         st.header("Upload Your CV in pdf format")
         uploaded_file = st.file_uploader(
@@ -90,12 +91,11 @@ def main():
                 options=LLM_MODELS[ModelProvider(choose_provider)],
             )
 
-    job_desc = st.text_area(
+    st.session_state["job_desc"] = st.text_area(
         "Enter the job description",
         placeholder="Paste the job description here...",
         height=300,
     )
-    st.session_state["job_desc"] = job_desc
 
     analyze_button, _, suggest_improv_button = st.columns(3)
     analyze_button = st.button(
@@ -131,7 +131,6 @@ def main():
         )
 
     if analyze_button:
-        sr = False
         st.session_state['messages'] = ChatPromptTemplate(
             [SystemMessage(content=prompts.EVALUATION_SYSTEM_MESSAGE), ("human", prompts.COMBINED_INPUT_TEMPLATE)]
         )
@@ -143,9 +142,15 @@ def main():
 
         resume_retriever = get_result_db_retriever(chunks)
 
-        resume_content = "\n\n".join([doc.page_content for doc in resume_retriever])
+        st.session_state["resume_content"] = "\n\n".join([doc.page_content for doc in resume_retriever])
 
-        output = model_output(choose_provider, choose_model, resume_content, job_desc, sr)  # type: ignore
+        output = model_output(
+            choose_provider,
+            choose_model,
+            st.session_state["resume_content"],
+            st.session_state["job_desc"],
+            suggest_improv_button,
+        )
     st.write(output)
 
 
