@@ -11,7 +11,7 @@ You are tasked with enhancing a candidate's resume based on a specific job descr
 
 3. **Suggestions for Improvement**:
    - **Rephrasing**: Identify existing points in the resume that can be rephrased to better align with the language and requirements of the job description. Ensure the rephrased points enhance clarity and impact.
-   - **Remapping of Skills**: Map the candidate's exisiting experience with the requirements of the job description, ensuring that the skills and experiences are presented in a way that highlights their relevance to the job.
+   - **Remapping of Skills**: Map the candidate's existing experience with the requirements of the job description, ensuring that the skills and experiences are presented in a way that highlights their relevance to the job.
    - **Adding New Points**: Suggest additional skills or experiences that are relevant to the job description but are currently missing from the resume. These should reflect the candidate’s existing skills and experiences.
    - **Removing Irrelevant Points**: Identify and recommend the removal of points that do not contribute to the candidate’s suitability for the job or that may detract from the overall focus of the resume.
 
