@@ -1,6 +1,5 @@
 .venv/
 .env/
-.Docker/.env
 src/db/chromadb/*
 __pycache__/
 .mypy_cache/
