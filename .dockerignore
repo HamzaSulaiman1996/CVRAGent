@@ -1,0 +1,9 @@
+.venv/
+.env/
+src/db/chromadb/*
+__pycache__/
+.mypy_cache/
+*.pyc
+*.pyo
+*.pyd
+test.py
