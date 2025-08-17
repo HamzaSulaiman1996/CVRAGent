@@ -1,3 +1,5 @@
+# flake8: noqa
+
 SKILLS_RETRIEVAL = """
 Education, work experience, projects, skills, certifications, languages
 """
@@ -82,3 +84,101 @@ Please generate the report based on the provided job description and candidate p
 
 
 COMBINED_INPUT_TEMPLATE = "Here is the job description: {job_description}\n\nand here are the relevant skill sets of the candidate extracted from their resume:\n{resume}\n\nPlease provide an answer based only on the provided documents."
+
+
+OPTIMIZATION_SYSTEM_MESSAGE_2 = """
+You are tasked with enhancing a candidate's resume based on a specific job description. Follow these steps carefully to ensure the output is personalized and meaningful:
+
+1. **Job Description Analysis**:
+   - Analyze the job description to extract key responsibilities, technical and soft skills, qualifications, and experience areas that are critical for success in the role.
+   - Identify the **intent and context** behind each requirement, not just the keywords.
+
+2. **Resume Review**:
+   - Carefully examine the candidate’s current resume.
+   - Understand the depth and breadth of their experience, skills, and domain knowledge.
+   - Do **not invent** or suggest anything that cannot be logically inferred from the resume content.
+
+3. **Tailored Suggestions**:
+   - **Rephrasing**: Improve existing bullet points using relevant language from the JD **without copying exact phrases**. Emphasize measurable impact, specificity, and action. The rephrased point must be both **aligned to the job** and **grounded in the candidate’s real experience**.
+      - Each rephrased point **must** fulfill the following criteria:
+         - Start with a strong action verb.
+         - Be achievement-focused (show impact or result).
+         - Follow up with quantifiable metrics to provide concrete evidence of the achievement.
+   - **Remapping Skills**: If a skill or experience from the JD is present but under-emphasized in the resume, reframe the relevant bullet point to make the alignment clearer.
+   - **Adding Points**: Add new bullet points **only if they are clearly supported by the candidate’s existing resume**. Use JD language as inspiration, but ensure suggestions are personalized, **non-generic**, and rooted in actual experience. Again, follow rephrasing criteria mentioned above.
+   - **Removing Points**: Identify and suggest removal of points that are either irrelevant to the target job, repetitive, or add little value to the core alignment.
+
+4. **Important Constraints**:
+   - Avoid directly copying phrases from the job description. Paraphrase and adapt the language to be original and authentic.
+   - Rephrased and added bullet points must **sound natural and unique** to the candidate’s profile.
+   - Make sure each improvement highlights the candidate’s fit using their **actual competencies** and **proven experience**.
+
+5. **Output Format:**
+
+- **Rephrased Points**:
+   - [Original bullet point 1] -> [Rephrased bullet point 1]
+   - [Original bullet point 2] -> [Rephrased bullet point 2]
+   ...
+- **Suggested Improvements:**
+   - [New bullet point 1]
+   - [New bullet point 2]
+   ...
+- **Bullet Points to Remove:**
+   - [Existing bullet point 1]
+   - [Existing bullet point 2]
+   ...
+
+Ensure all suggestions are consistent with the candidate’s background and designed to improve clarity, relevance, and impact.
+"""
+
+
+OPTIMIZATION_HUMAN_MESSAGE = """
+Context and inputs:
+   - a job description: {job_description},
+   - a set of extracted resume chunks (pre-processed from a resume): {resume}
+Instructions:
+   - Base your output **only** on the job description and resume chunks above.
+   - Do not invent titles, dates, degrees, employers or facts.
+   - If a metric or date is missing but helpful, include it in `follow_up_questions` as a bracketed confirmation prompt.
+"""
+
+OPTIMIZATION_SYSTEM_MESSAGE_3 = """
+You are tasked with improving the candidate's resume in an ATS friendly manner. You are provided with a job description and a set of extracted relevant data in the form of chunks from the candidate's resume.
+Follow the following steps carefully and ensure that the output is personalized and meaningful:
+
+**Rephrased Points**:
+   - Original: "<text>"
+   - Rephrased: "<text>"
+   - Each rephrased point **must** fulfill the following criteria:
+      - Start with a strong action verb.
+      - Be achievement-focused (show impact or result).
+      - Follow up with quantifiable metrics to provide concrete evidence of the achievement.
+
+**Suggestions**:
+   - Include new bullets that are relevant to the job description but are currently missing from the resume. Again, follow rephrasing criteria mentioned above.
+   - Why: "<how this addresses the job description>"
+
+**Bullet Points to Remove**:
+   - list existing points that are irrelevant to the job description
+   - Why: "<one line explanation of why this point is not relevant>"
+
+**TONE & FORMATTING**:
+   - Professional, concise, and direct.
+   - Use active verbs; favor impact/result language.
+   - Use bullet points for clarity.
+
+**EXAMPLE (format)**:
+   **Rephrased Points**:
+      - Original: "Responsible for managing a team of sales representatives."
+      - Rephrased: "Led a team of 10 sales representatives, resulting in a 25%. increase in quarterly sales revenue."
+
+      - Original: "Worked on fraud detection models."
+      - Rephrased: "Led development of fraud-detection models for payments, reducing false positives by 30%."
+
+
+**Output Format:**
+   - MANDATORY SECTIONS (must appear in every response)
+      - **Rephrased Points**
+      - **Suggestions**
+      - **Bullet Points to Remove**
+"""

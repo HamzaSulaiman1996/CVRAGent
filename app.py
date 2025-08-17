@@ -1,4 +1,5 @@
 import logging
+from pathlib import Path
 
 import streamlit as st
 from langchain.retrievers import EnsembleRetriever
@@ -8,12 +9,21 @@ from langchain_core.messages import SystemMessage
 from langchain_core.prompts import ChatPromptTemplate
 
 import src.prompt_lists as prompts
+from src.assests.load import load_css
 from src.db.vector_store import init_chromadb
 from src.embedding import init_embedding_model
 from src.frontend.domain import check_job_length, format_output
 from src.models.model_config import LLM_MODELS, GeneralModelConfig, ModelProvider
 from src.models.models import init_model
 from src.parser import PDFParser
+
+
+@st.cache_data(show_spinner=False)
+def parse_pdf(uploaded_file) -> str:
+    parser = PDFParser(uploaded_file, chunk_size=1000)
+    chunks = parser.get_chunks()
+    resume_retriever = get_result_db_retriever(chunks)
+    return "\n\n".join([doc.page_content for doc in resume_retriever])
 
 
 @st.cache_data(show_spinner=False, max_entries=3)
@@ -23,11 +33,9 @@ def model_output(
     """
     Cache the model output based on model name, job description, and resume content.
     """
-
-    kwargs = {**GeneralModelConfig().model_dump(), **kwargs}
+    kwargs = {**GeneralModelConfig(model_name=model_name).model_dump(), **kwargs}
     model = init_model(
         provider=ModelProvider(model_provider),
-        model_name=model_name,
         **kwargs,
     )
 
@@ -42,7 +50,6 @@ def get_result_db_retriever(_chunks: list[Document]) -> list[Document]:
         docs=_chunks,
         collection_name="cvragent",
         embeddings=embedding_model,
-        persistent_directory=f"src/db/chromadb/{st.session_state['uploaded_file'].file_id}",
     )
     chroma = chroma_retriever.as_retriever(
         search_type="similarity_score_threshold", search_kwargs={"k": 10, "score_threshold": 0.2}
@@ -54,7 +61,7 @@ def get_result_db_retriever(_chunks: list[Document]) -> list[Document]:
 
 
 def initialize_session_state():
-    states = ["uploaded_file", "job_desc", "messages", "choose_provider", "choose_model"]
+    states = ["uploaded_file", "job_desc", "messages", "choose_provider", "choose_model", "resume_content"]
     for state in states:
         if state not in st.session_state:
             st.session_state[state] = None
@@ -66,12 +73,17 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(level
 def main():
 
     initialize_session_state()
+    load_css(Path("src/assests/styles.css"))
+
+    if not st.user.is_logged_in:
+        st.error("Please log in to access the CVRAGent.")
+        return
 
     st.title("CVRAGent :pencil:")
-    st.write("An AI-powered CV Review Agent :robot_face:")
+    st.header("An AI-powered CV Review Agent :robot_face:")
 
     with st.sidebar:
-        st.header("Upload Your CV in pdf format")
+        st.subheader("Upload Your CV in pdf format")
         uploaded_file = st.file_uploader(
             label="Upload your CV",
             label_visibility='hidden',
@@ -80,21 +92,28 @@ def main():
         )
         st.session_state["uploaded_file"] = uploaded_file
 
+        if st.session_state["uploaded_file"]:
+            with st.spinner("Processing your resume..."):
+                st.session_state["resume_content"] = parse_pdf(st.session_state["uploaded_file"])
         choose_provider = st.selectbox(
             label="Select model provider",
             options=[model.value for model in ModelProvider],
+            disabled=not st.session_state["uploaded_file"],
             index=None,
+            key="provider_select",
         )
         if choose_provider:
             choose_model = st.selectbox(
                 label="Select model",
                 options=LLM_MODELS[ModelProvider(choose_provider)],
+                disabled=not st.session_state["uploaded_file"],
+                key="model_select",
             )
-
     st.session_state["job_desc"] = st.text_area(
         "Enter the job description",
         placeholder="Paste the job description here...",
         height=300,
+        key="description",
     )
 
     analyze_button, _, suggest_improv_button = st.columns(3)
@@ -103,6 +122,7 @@ def main():
         type="primary",
         icon="✅",
         use_container_width=True,
+        key="analyze_button",
     )
     suggest_improv_button = st.button(
         label="Suggest Improvements",
@@ -127,7 +147,10 @@ def main():
 
     if suggest_improv_button:
         st.session_state['messages'] = ChatPromptTemplate(
-            [SystemMessage(content=prompts.OPTIMIZATION_SYSTEM_MESSAGE), ("human", prompts.COMBINED_INPUT_TEMPLATE)]
+            [
+                SystemMessage(content=prompts.OPTIMIZATION_SYSTEM_MESSAGE_3),
+                ("human", prompts.OPTIMIZATION_HUMAN_MESSAGE),
+            ]
         )
 
     if analyze_button:
@@ -136,14 +159,6 @@ def main():
         )
 
     with st.spinner("Generating..."):
-        # Parse the uploaded CV
-        pdf_parser = PDFParser(file_path=st.session_state["uploaded_file"], chunk_size=1000)
-        chunks = pdf_parser.get_chunks()
-
-        resume_retriever = get_result_db_retriever(chunks)
-
-        st.session_state["resume_content"] = "\n\n".join([doc.page_content for doc in resume_retriever])
-
         output = model_output(
             choose_provider,
             choose_model,

@@ -1,0 +1,67 @@
+
+
+[data-testid="stSidebarNavLink"] span  {
+    font-size: 1.1rem !important;
+    font-weight: 700 !important;
+    color: #e5e5e5 !important;
+}
+
+[data-testid="stFileUploader"] span,
+[data-testid="stFileUploader"] small {
+    color: #e5e5e5 !important;
+}
+
+button[kind="primary"] {
+    background-color: #165e99ff;
+    border: None;
+    transition: background-color 0.3s ease;
+    border-radius: 10rem;
+}
+
+button[kind="primary"]:hover {
+  background-color: #0e3e66ff;
+}
+
+button[kind="primary"] p {
+    font-size: x-large;
+    color: #e5e5e5;
+}
+
+button[kind="primary"] p:focus {
+  border: None;
+  color: #e5e5e5;
+}
+
+
+.title {
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: #e5e5e5;
+    margin-bottom: 1rem;
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #e5e5e5;
+    margin-bottom: 2rem;
+}
+
+.st-key-description textarea{
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #e5e5e5;
+    background-color: #0e3e66ff;
+    border: 1px solid #0e3e66ff;
+    border-radius: 4px;
+    padding: 10px;
+}
+
+.st-key-description p {
+    color: #e5e5e5;
+}
+
+.st-key-model_select div,li,
+.st-key-provider_select div,li{
+     color: #e5e5e5 !important;
+}
