@@ -70,7 +70,7 @@ class PDFParser(BaseParser):
         """
         Save uploaded PDF to a temporary location in /tmp.
         """
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf", dir="/tmp") as tmp_file:
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_file:
             tmp_file.write(uploaded_file.getbuffer())
             tmp_path = tmp_file.name
         return tmp_path
