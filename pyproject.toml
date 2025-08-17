@@ -2,7 +2,7 @@
 name = "CVRAGent"
 version = "0.1.0"
 description = "A streamlit application to enhance CV by utilizing LLM and RAG. Can do the following:/n1. Suggests key sentences based on job description./n2. Determines the relevence of CV to job description."
-authors = ["Hamza Sulaiman <hamza.sulaiman2009@gmail.com"]
+authors = ["Hamza Sulaiman <hamza.sulaiman2009@gmail.com>"]
 license = "Apache-2.0"
 
 [tool.poetry.dependencies]
