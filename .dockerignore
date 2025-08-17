@@ -1,12 +1,10 @@
-.env
 .venv/
-.Docker/.env
+.env/
 .streamlit/secrets.toml
-.mypy_cache/
+src/db/chromadb/*
 __pycache__/
+.mypy_cache/
 *.pyc
 *.pyo
 *.pyd
 test.py
-src/db/chromadb/
-src/documents/
